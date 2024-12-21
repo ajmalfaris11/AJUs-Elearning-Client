@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         // Apply the fonts and background styles to the body element
-        className={`${poppins.variable} ${josefin.variable} !bg-white dark:bg-gradient-to-b dark:from-gray-900 dark:to-black duration-300`}
+        className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black duration-300`}
       >
         {/* ThemeProvider wraps the children to handle theme management */}
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
