@@ -15,12 +15,11 @@ export const ThemeSwitcher = () => {
   }
 
   return (
-    <div className="flex items-center justify-center mx-4"> {/* Container for the theme toggle button */}
+    <div className="flex items-center justify-center mx-4 rounded-md bg-[#6126d7] text-white p-1.5"> {/* Container for the theme toggle button */}
       {theme === "light" ? ( 
         <BiMoon
-          className="coursor-pointer" 
-          fill="black" 
-          size={25} 
+        className="cursor-pointer" 
+        size={25} 
           onClick={() => setTheme("dark")} // Toggles the theme to dark when clicked.
         />
       ) : (
