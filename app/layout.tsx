@@ -1,6 +1,7 @@
 import { Poppins, Josefin_Sans } from "next/font/google"; // Importing fonts from Google Fonts for use in the application
 import "./globals.css"; // Import global CSS styles
 import { ThemeProvider } from "./utils/theme-provider"; // Import ThemeProvider for handling theme switching
+import { Toaster } from "react-hot-toast";
 
 // Set up Poppins font with specific settings (weights and variable)
 const poppins = Poppins({
@@ -32,6 +33,8 @@ export default function RootLayout({
         {/* ThemeProvider wraps the children to handle theme management */}
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           {children} {/* Render the child components inside the layout */}
+          {/* The Toaster component from 'react-hot-toast' is added to provide toast notifications within the application. */}
+          <Toaster position='top-center' reverseOrder={false}/>
         </ThemeProvider>
       </body>
     </html>
