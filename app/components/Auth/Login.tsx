@@ -113,7 +113,7 @@ const Login: React.FC<Props> = ({ setRoute }: any) => {
             <input
               type="submit"
               value="Login"
-              className={`${styles.button} bg-[#6126d7] `}
+              className={`${styles.button}`}
             />
           </form>
 
