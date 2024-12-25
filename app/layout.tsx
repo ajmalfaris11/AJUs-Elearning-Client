@@ -1,20 +1,22 @@
+'use client'
 import { Poppins, Josefin_Sans } from "next/font/google"; // Importing fonts from Google Fonts for use in the application
 import "./globals.css"; // Import global CSS styles
 import { ThemeProvider } from "./utils/theme-provider"; // Import ThemeProvider for handling theme switching
 import { Toaster } from "react-hot-toast";
+import { Providers } from "./Provider";
 
 // Set up Poppins font with specific settings (weights and variable)
 const poppins = Poppins({
-  subsets: ["latin"], 
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-Porppins" 
+  variable: "--font-Porppins",
 });
 
 // Set up Josefin Sans font with specific settings (weights and variable)
 const josefin = Josefin_Sans({
-  subsets: ["latin"], 
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-Josefin", 
+  variable: "--font-Josefin",
 });
 
 // RootLayout component that wraps the entire application
@@ -30,12 +32,14 @@ export default function RootLayout({
         // Apply the fonts and background styles to the body element
         className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black duration-300`}
       >
-        {/* ThemeProvider wraps the children to handle theme management */}
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-          {children} {/* Render the child components inside the layout */}
-          {/* The Toaster component from 'react-hot-toast' is added to provide toast notifications within the application. */}
-          <Toaster position='top-center' reverseOrder={false}/>
-        </ThemeProvider>
+        <Providers>
+          {/* ThemeProvider wraps the children to handle theme management */}
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children} {/* Render the child components inside the layout */}
+            {/* The Toaster component from 'react-hot-toast' is added to provide toast notifications within the application. */}
+            <Toaster position="top-center" reverseOrder={false} />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
