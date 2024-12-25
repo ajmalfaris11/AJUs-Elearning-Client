@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -11,6 +10,8 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../styles/style";
 import Image from "next/image";
+import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 // Validation schema using Yup for email and password validation
 const schema = Yup.object().shape({
@@ -21,19 +22,45 @@ const schema = Yup.object().shape({
   password: Yup.string().required("Please enter your password!").min(6),
 });
 
-interface Props {
-  set: (route: string) => void; // This prop will be used to change the route (page navigation)
-}
+type Props = {
+  setRoute: (route: string) => void; // This prop will be used to change the route (page navigation)
+};
 
-const SignUp: React.FC<Props> = ({ setRoute }: any) => {
+const SignUp: React.FC<Props> = ({ setRoute }) => {
   const [show, setShow] = useState(false); // State to toggle password visibility
+  const [register, { data, error, isSuccess }] = useRegisterMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      const message = data?.message || "Registration successful";
+      toast.success(message);
+      setRoute("Verification");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        const errorMessage =
+          errorData.data.error ||
+          errorData.data.message ||
+          "An unexpected error occurred";
+        toast.error(errorMessage);
+      }
+    }
+  }, [isSuccess, error]);
 
   // Formik initialization and handling form submission
   const formik = useFormik({
-    initialValues: { name: "", email: "", password: "" },
-    validationSchema: schema, // Validation schema for the form
-    onSubmit: async ({ email, password }) => {
-      setRoute("Verification")
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: schema,
+    onSubmit: async ({name, email, password}) => {
+      const data = {
+        name, email, password
+      };
+      await register(data)
     },
   });
 
@@ -93,7 +120,7 @@ const SignUp: React.FC<Props> = ({ setRoute }: any) => {
             <div className="w-full relative mb-1">
               <input
                 type={!show ? "password" : "text"} // Toggle password visibility
-                name=""
+                name="password"
                 value={values.password}
                 onChange={handleChange}
                 id="password"
@@ -140,8 +167,14 @@ const SignUp: React.FC<Props> = ({ setRoute }: any) => {
             Or join with us
           </h5>
           <div className="flex items-center justify-center my-3 gap-5">
-            <FcGoogle size={30} className="cursor-pointer my-3 hover:scale-110 transform transition-transform duration-300" />
-            <AiFillGithub size={30} className="cursor-pointer ml-2 hover:scale-110 transform transition-transform duration-300" />
+            <FcGoogle
+              size={30}
+              className="cursor-pointer my-3 hover:scale-110 transform transition-transform duration-300"
+            />
+            <AiFillGithub
+              size={30}
+              className="cursor-pointer ml-2 hover:scale-110 transform transition-transform duration-300"
+            />
           </div>
         </div>
       </div>
