@@ -1,8 +1,10 @@
 // Importing required dependencies and styles
 import { styles } from "@/app/styles/style";
-import React, { FC, useRef, useState } from "react";
+import { useActivationMutation } from "@/redux/features/auth/authApi";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast"; // For showing notifications (not used here but included for potential use)
 import { VscWorkspaceTrusted } from "react-icons/vsc"; // Trusted verification icon
+import { useSelector } from "react-redux";
 
 // Type definition for props, including a function to set the current route
 type Props = {
@@ -18,8 +20,27 @@ type VerifyNumber = {
 };
 
 const Verification: FC<Props> = ({ setRoute }) => {
+  const {token} = useSelector((state:any) => state.auth);
+  const [activation, {isSuccess, error}] = useActivationMutation();
   // State to track invalid OTP errors
   const [invalidError, setInvalidError] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Account has been activated successfully");
+      setRoute("Login");
+    };
+    if (error) {
+      if("data" in error) {
+       const errorData = error as any;
+       toast.error(errorData.data.message);
+       setInvalidError(true);
+      } else {
+        console.log("An error occured:", error);
+      }
+    };
+  }, [isSuccess, error]);
+
 
   // Refs for managing focus of OTP input fields
   const inputRefs = [
@@ -38,8 +59,16 @@ const Verification: FC<Props> = ({ setRoute }) => {
   });
 
   // Function to handle OTP verification
-  const VerificationHandler = async () => {
-    setInvalidError(true); // Simulates setting an error when verification fails
+  const verificationHandler = async () => {
+    const verificationNumber = Object.values(verifyNumber).join("");
+    if(verificationNumber.length !== 4) {
+      setInvalidError(true);
+      return;
+    }
+    await activation({
+      activation_token:token,
+      activation_code:verificationNumber
+    });
   };
 
   // Handles changes in OTP input fields
@@ -93,7 +122,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
 
       {/* Verify button */}
       <div className="w-full flex justify-center">
-        <button className={`${styles.button} mt-0.5`} onClick={VerificationHandler}>
+        <button className={`${styles.button} mt-0.5`} onClick={verificationHandler}>
           VERIFY THE OTP
         </button>
       </div>
