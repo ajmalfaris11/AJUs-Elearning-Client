@@ -3,7 +3,16 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_SERVER_URI }),
-    endpoints: (builder) => ({}),
-});
+    endpoints: (builder) => ({
+        refreshToken: builder.query({
+            query: (data) => ({
+                url: "refresh-token",
+                method: "GET",
+                credentials: "include" as const,
+            }),
+    
+        }),
+    }),
+}); 
 
-export const {} = apiSlice;
+export const {useRefreshTokenQuery} = apiSlice;
