@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -11,6 +11,8 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../../app/styles/style";
 import Image from "next/image";
+import { useLloginMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 // Validation schema using Yup for email and password validation
 const schema = Yup.object().shape({
@@ -22,19 +24,35 @@ const schema = Yup.object().shape({
 
 interface Props {
   set: (route: string) => void; // This prop will be used to change the route (page navigation)
+  setOpen: (open: boolean) => void;
 }
 
-const Login: React.FC<Props> = ({ setRoute }: any) => {
+const Login: React.FC<Props> = ({ setRoute, setOpen }: any) => {
   const [show, setShow] = useState(false); // State to toggle password visibility
+  const [login,{isSuccess, error}] = useLloginMutation();
+
 
   // Formik initialization and handling form submission
   const formik = useFormik({
     initialValues: { email: "", password: "" }, // Initial form values
     validationSchema: schema, // Validation schema for the form
     onSubmit: async ({ email, password }) => {
-      console.log(email, password); // Handle form submission (you can replace this with actual authentication logic)
+      await login({email,password});
     },
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Login successful!");
+      setOpen(false);
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      }
+    }
+  }, [isSuccess, error]);
 
   const { errors, touched, values, handleChange, handleSubmit } = formik; // Extract Formik methods and values
 
