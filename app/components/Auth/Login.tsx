@@ -11,7 +11,7 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../../app/styles/style";
 import Image from "next/image";
-import { useLloginMutation } from "@/redux/features/auth/authApi";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 
 // Validation schema using Yup for email and password validation
@@ -29,7 +29,7 @@ interface Props {
 
 const Login: React.FC<Props> = ({ setRoute, setOpen }: any) => {
   const [show, setShow] = useState(false); // State to toggle password visibility
-  const [login,{isSuccess, error}] = useLloginMutation();
+  const [login,{isSuccess, error}] = useLoginMutation();
 
 
   // Formik initialization and handling form submission
