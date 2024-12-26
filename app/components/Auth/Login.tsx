@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,6 +12,7 @@ import { styles } from "../../../app/styles/style";
 import Image from "next/image";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import { signIn } from 'next-auth/react';
 
 // Validation schema using Yup for email and password validation
 const schema = Yup.object().shape({
@@ -140,8 +140,12 @@ const Login: React.FC<Props> = ({ setRoute, setOpen }: any) => {
             Or join with us
           </h5>
           <div className="flex items-center justify-center my-3 gap-5">
-            <FcGoogle size={30} className="cursor-pointer my-3 hover:scale-110 transform transition-transform duration-300" />
-            <AiFillGithub size={30} className="cursor-pointer ml-2 hover:scale-110 transform transition-transform duration-300" />
+            <FcGoogle size={30} className="cursor-pointer my-3 hover:scale-110 transform transition-transform duration-300" 
+            onClick={() => signIn("google")}
+            />
+            <AiFillGithub size={30} className="cursor-pointer ml-2 hover:scale-110 transform transition-transform duration-300" 
+            onClick={() => signIn("github")}
+            />
           </div>
         </div>
       </div>
