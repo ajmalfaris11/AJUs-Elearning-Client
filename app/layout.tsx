@@ -4,6 +4,7 @@ import "./globals.css"; // Import global CSS styles
 import { ThemeProvider } from "./utils/theme-provider"; // Import ThemeProvider for handling theme switching
 import { Toaster } from "react-hot-toast";
 import { Providers } from "./Provider";
+import { SessionProvider } from "next-auth/react";
 
 // Set up Poppins font with specific settings (weights and variable)
 const poppins = Poppins({
@@ -33,12 +34,14 @@ export default function RootLayout({
         className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black duration-300`}
       >
         <Providers>
+        <SessionProvider>
           {/* ThemeProvider wraps the children to handle theme management */}
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children} {/* Render the child components inside the layout */}
             {/* The Toaster component from 'react-hot-toast' is added to provide toast notifications within the application. */}
             <Toaster position="top-center" reverseOrder={false} />
           </ThemeProvider>
+        </SessionProvider>
         </Providers>
       </body>
     </html>
