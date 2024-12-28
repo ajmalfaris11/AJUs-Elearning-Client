@@ -84,3 +84,24 @@ body {
 .shake {
   animation: shake 0.5s ease-in-out;
 }
+
+
+/* global.css or a specific CSS module */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ffffff52; /* Scrollbar thumb (the draggable part) color */
+  border-radius: 18px; /* Rounded edges */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6126d7; /* Color on hover */
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(0, 0, 0); /* Track background color */
+}
