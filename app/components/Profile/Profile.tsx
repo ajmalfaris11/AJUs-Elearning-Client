@@ -20,8 +20,8 @@ const Profile: FC<Props> = ({ user }) => {
   });
 
   const logoutHangler = async () => {
-    signOut();
     setLoggout(true);
+    await signOut();
   };
 
   if (typeof window !== "undefined") {

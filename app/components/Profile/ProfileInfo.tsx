@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { styles } from "../../../app/styles/style";
 import Image from "next/image";
 import { AiOutlineCamera } from "react-icons/ai";
@@ -6,6 +6,8 @@ import avatarIcon from "../../../public/assets/default-user-avatar.png";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineMailLock } from "react-icons/md";
 import { FaWhatsapp } from "react-icons/fa";
+import { useUpdateAvatarMutation } from "@/redux/features/user/userApi";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 
 type Props = {
   avatar: string | null;
@@ -14,10 +16,33 @@ type Props = {
 
 const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user.name);
+  const [updateAvatar, {isSuccess, error}] = useUpdateAvatarMutation();
+  const [loadUser, setLoadUser] = useState(false);
+  const {} = useLoadUserQuery(undefined, {skip: loadUser ? false : true});
+
 
   const imageHandler = async (e: any) => {
-    console.log("img img img");
+    const fileReader = new FileReader();
+
+    fileReader.onload = () => {
+      if (fileReader.readyState === 2) {
+        const avatar = fileReader.result;
+        updateAvatar(
+          avatar //avatar : avatar
+        );
+      }
+    }
+    fileReader.readAsDataURL(e.target.files[0]);
   };
+
+  useEffect(() => {
+    if (isSuccess){
+      setLoadUser(true)
+    }
+    if(error){
+      console.log(error);
+    }
+  }, [isSuccess, error]);
 
   const handleSubmit = async (e: any) => {
     console.log("submit");
@@ -33,7 +58,9 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
               src={
                 user.avatar || avatar ? user.avatar.url || avatar : avatarIcon
               }
-              alt=""
+              alt="avatar"
+              width={120}
+              height={120}
               className="w-[250px] h-[250px] cursor-pointer border-[3px] border-[#6126d7] rounded-full"
             />
             {/* Hidden File Input for Image Upload */}
